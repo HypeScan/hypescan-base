@@ -98,10 +98,6 @@ Start the FastAPI development server:
 uvicorn main:app --reload
 ```
 
-Access the API documentation:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
 ## API Endpoints
 
 ### Token Analysis
