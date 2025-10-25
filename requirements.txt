@@ -2,6 +2,11 @@ snscrape
 pydantic
 requests
 python-dotenv
+fastapi
+uvicorn
+python-multipart
+crewai
+playwright
 
-# enter pair for moralis
-playwright install chromium
+# enter token pair address for moralis
+# playwright install chromium
