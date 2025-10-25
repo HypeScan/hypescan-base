@@ -1,29 +1,38 @@
-# HypeScan 🚀
+# HypeScan: Advanced Cryptocurrency Analysis Platform 
 
-HypeScan is a powerful cryptocurrency analysis platform that provides real-time token analysis, social sentiment tracking, and market insights. Built with FastAPI and leveraging multiple data sources including Moralis and Twitter, it offers comprehensive analytics for crypto traders and enthusiasts.
+HypeScan is a sophisticated cryptocurrency analysis platform that combines on-chain data, social sentiment, and AI-powered insights to provide comprehensive token analysis. Built with FastAPI and leveraging multiple data sources including Moralis, Bitquery, and Gemini AI, it offers traders and investors deep insights into token metrics and market trends.
 
-## Features
+## Key Features
 
-- **Token Analysis**: In-depth analysis of cryptocurrency tokens using Moralis data
-- **Social Sentiment**: Track Twitter mentions and sentiment for tokens
-- **Market Data**: Real-time price, volume, and liquidity metrics
-- **AI-Powered Insights**: CrewAI integration for intelligent analysis and reporting
-- **RESTful API**: Easy integration with other applications
+- **Comprehensive Token Analysis**: In-depth analysis using Moralis API for on-chain data
+- **AI-Powered Insights**: Advanced analysis using CrewAI and Gemini 1.5 Pro
+- **Social Sentiment**: Twitter sentiment analysis and community engagement metrics
+- **Security Analysis**: GMGN.ai integration for token security assessment
+- **Real-time Market Data**: Price, volume, liquidity, and holder analysis
+- **Predictive Analytics**: AI-driven price movement predictions
 
 ## Tech Stack
 
 - **Backend**: FastAPI, Python 3.11+
-- **Data Sources**: Moralis API, Twitter API, Bitquery
-- **AI/ML**: CrewAI for intelligent analysis
+- **AI/ML**: 
+  - CrewAI for multi-agent analysis
+  - Gemini 1.5 Pro for advanced reasoning
+  - Multiple LLM integration (Llama 3, DeepSeek)
+- **Data Sources**:
+  - Moralis API
+  - Bitquery
+  - GMGN.ai
+  - Twitter API
 - **Deployment**: Uvicorn ASGI server
+- **Containerization**: Docker support
 
-## Quick Start
+## Getting Started
 
 ### Prerequisites
 
 - Python 3.11 or higher
 - [Poetry](https://python-poetry.org/) (recommended) or pip
-- API keys for Moralis, Twitter, and Bitquery
+- Required API keys (see Configuration)
 
 ### Installation
 
@@ -42,70 +51,86 @@ HypeScan is a powerful cryptocurrency analysis platform that provides real-time 
    pip install -r requirements.txt
    ```
 
-3. Set up environment variables:
+3. Install Playwright for browser automation:
    ```bash
-   cp .env.example .env
-   # Edit .env with your API keys
+   playwright install
    ```
 
-### Running the Application
+### Configuration
 
-```bash
-# Start the FastAPI server
-uvicorn main:app --reload
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-# Access the API documentation at:
-# - Swagger UI: http://localhost:8000/docs
-# - ReDoc: http://localhost:8000/redoc
-```
+2. Update `.env` with your API keys:
+   ```
+   # Required API Keys
+   OPENAI_API_KEY=your_openai_api_key
+   GROQ_API_KEY=your_groq_api_key
+   GEMINI_API_KEY=your_gemini_api_key
+   
+   # Optional but recommended
+   MORALIS_API_KEY=your_moralis_api_key
+   BITQUERY_API_KEY=your_bitquery_api_key
+   ```
 
-## API Endpoints
-
-- `GET /api/analyze-token/{token_address}` - Analyze a token's data
-- `GET /health` - Health check endpoint
-
-## Services
-
-### Token Analysis Service
-Located in `services/moralis.py`, this service handles fetching and processing token data from Moralis API.
-
-### AI Analysis
-Uses CrewAI in `services/agents.py` to provide intelligent insights and analysis of token data.
-
-### Twitter Integration
-Social sentiment analysis through Twitter data collection and processing.
-
-## Development
-
-### Project Structure
+## Project Structure
 
 ```
 hypescan-base/
-├── services/           # Core services
-│   ├── agents.py      # AI analysis with CrewAI
-│   ├── models.py      # Pydantic models
-│   └── moralis.py     # Moralis API integration
-├── main.py            # FastAPI application
-├── bitq.py            # Bitquery integration
-├── gmgn_crawler.py    # GMGN crawler
-├── scrape.py          # Social media scraping
-└── requirements.txt   # Dependencies
+├── services/
+│   ├── agents.py       # AI analysis agents and tasks
+│   ├── models.py       # Pydantic models and schemas
+│   ├── moralis.py      # Moralis API integration
+│   └── gemini.py       # Gemini AI integration
+├── bitq.py             # Bitquery integration
+├── gmgn_crawler.py     # GMGN.ai data collection
+├── main.py             # FastAPI application entry point
+└── requirements.txt    # Python dependencies
 ```
 
-### Environment Variables
+## Running the Application
 
-Create a `.env` file with the following variables:
+Start the FastAPI development server:
 
+```bash
+uvicorn main:app --reload
 ```
-MORALIS_API_KEY=your_moralis_api_key
-TWITTER_USERNAME=your_twitter_username
-TWITTER_PASSWORD=your_twitter_password
-BITQUERY_API_KEY=your_bitquery_api_key
-```
+
+Access the API documentation:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+## API Endpoints
+
+### Token Analysis
+- `GET /api/analyze-token/{token_address}`
+  - Analyzes a token using multiple data sources
+  - Returns comprehensive analysis including price, volume, and AI insights
+
+### System Health
+- `GET /health` - Service health check
+
+## AI Analysis Pipeline
+
+HypeScan uses a multi-agent system powered by CrewAI:
+
+1. **Data Analyzer**: Processes raw token metrics and market data
+2. **GMGN Analyzer**: Evaluates token safety and security metrics
+3. **Twitter Analyzer**: Assesses social sentiment and community engagement
+4. **Prediction Agent**: Provides buy/sell/hold recommendations
+
+## Security
+
+- All sensitive data is stored in environment variables
+- API keys are never hardcoded in the source
+- Input validation using Pydantic models
+- Rate limiting (coming soon)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - See [LICENSE](LICENSE) for details.
 
 ## Acknowledgements
 
@@ -115,4 +140,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For any questions or suggestions, please open an issue or contact the maintainers.
+For inquiries or support, please open an issue on GitHub or contact the maintainers.
