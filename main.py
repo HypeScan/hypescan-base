@@ -1,7 +1,7 @@
 import asyncio
 import json
-from moralis import fetch_token_price
-from agents import moralis_crew
+from services.moralis import fetch_token_price
+from services.agents import moralis_crew
 
 # Example: replace with your token address
 TOKEN_ADDRESS = "0x98c8f03094a9e65ccedc14c40130e4a5dd0ce14fb12ea58cbeac11f662b458b9"
@@ -19,15 +19,13 @@ async def main():
     print("\nFetched token data:")
     print(json.dumps(price_data, indent=4))
 
-    # 2️⃣ Pass the data to CrewAI Moralis agent
-    tasks_data = {"data": price_data}
-
     print("\nRunning CrewAI Moralis analysis...")
-    analysis_result = moralis_crew.run(tasks_data=tasks_data)
+    analysis_result = moralis_crew.kickoff(inputs={"data": price_data})
 
     # 3️⃣ Print the analysis output
     print("\n===== CREWAI TOKEN ANALYSIS OUTPUT =====")
     print(analysis_result)
+    analysis_result = analysis_result.raw
 
     # 4️⃣ Save the result to JSON file
     with open("moralis_token_analysis_result.json", "w") as f:
