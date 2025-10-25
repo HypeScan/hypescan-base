@@ -1,37 +1,70 @@
-import asyncio
 import json
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, HttpUrl, Field
+from typing import Optional, Dict, Any
+import uvicorn
 from services.moralis import fetch_token_price
 from services.agents import moralis_crew
+from services.models import TokenAnalysisResponse
 
-# Example: replace with your token address
-TOKEN_ADDRESS = "0x98c8f03094a9e65ccedc14c40130e4a5dd0ce14fb12ea58cbeac11f662b458b9"
+app = FastAPI(
+    title="HypeScan Token Analysis API",
+    description="API for analyzing cryptocurrency tokens using Moralis data and CrewAI",
+    version="1.0.0"
+)
 
-async def main():
-    # 1️⃣ Fetch token data from Moralis
-    print(f"Fetching token data for: {TOKEN_ADDRESS} ...")
-    price_data = fetch_token_price(TOKEN_ADDRESS)
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    if "error" in price_data:
-        print("Error fetching token data:", price_data["error"])
-        return
+@app.get("/api/analyze-token/{token_address}", response_model=TokenAnalysisResponse)
+async def analyze_token(token_address: str):
+    """
+    Analyze a token's data using Moralis and CrewAI
+    
+    - **token_address**: The token's address or pair address to analyze
+    """
+    try:
+        # 1️⃣ Fetch token data from Moralis
+        print(f"Fetching token data for: {token_address} ...")
+        price_data = fetch_token_price(token_address)
 
-    # Optional: pretty print fetched token data
-    print("\nFetched token data:")
-    print(json.dumps(price_data, indent=4))
+        if "error" in price_data:
+            error_msg = f"Error fetching token data: {price_data['error']}"
+            print(error_msg)
+            return TokenAnalysisResponse(success=False, error=error_msg)
 
-    print("\nRunning CrewAI Moralis analysis...")
-    analysis_result = moralis_crew.kickoff(inputs={"data": price_data})
+        print("\nRunning CrewAI Moralis analysis...")
+        analysis_result = moralis_crew.kickoff(inputs={"data": price_data})
+        
+        # Convert to dict if it's a raw object
+        if hasattr(analysis_result, 'raw'):
+            analysis_result = analysis_result.raw
 
-    # 3️⃣ Print the analysis output
-    print("\n===== CREWAI TOKEN ANALYSIS OUTPUT =====")
-    print(analysis_result)
-    analysis_result = analysis_result.raw
+        # 3️⃣ Return the analysis output
+        return TokenAnalysisResponse(
+            success=True,
+            data={
+                "token_data": price_data,
+                "analysis": analysis_result
+            }
+        )
 
-    # 4️⃣ Save the result to JSON file
-    with open("moralis_token_analysis_result.json", "w") as f:
-        json.dump(analysis_result, f, indent=4)
-    print("\nAnalysis saved to: moralis_token_analysis_result.json")
+    except Exception as e:
+        error_msg = f"Error processing token analysis: {str(e)}"
+        print(error_msg)
+        raise HTTPException(status_code=500, detail=error_msg)
 
-# Run the async main
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy"}
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
