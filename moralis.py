@@ -72,10 +72,8 @@ def fetch_token_price(pairAddress)->TokenData :
         print(f"An error occurred: {err}")
         return {"error": str(err)}
 
-if __name__ == "__main__":
-    token_address = "0x98c8f03094a9e65ccedc14c40130e4a5dd0ce14fb12ea58cbeac11f662b458b9"
-    price_data = fetch_token_price(token_address)
-    print(json.dumps(price_data, indent=4)) 
-    print(price_data)
-
-
+# if __name__ == "__main__":
+#     token_address = "0x98c8f03094a9e65ccedc14c40130e4a5dd0ce14fb12ea58cbeac11f662b458b9"
+#     price_data = fetch_token_price(token_address)
+#     print(json.dumps(price_data, indent=4)) 
+#     print(price_data)

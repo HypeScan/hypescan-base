@@ -1,1 +1,7 @@
 snscrape
+pydantic
+requests
+python-dotenv
+
+# enter pair for moralis
+playwright install chromium
