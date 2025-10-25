@@ -7,6 +7,7 @@ uvicorn
 python-multipart
 crewai
 playwright
+selenium
 
 # enter token pair address for moralis
 # playwright install chromium
